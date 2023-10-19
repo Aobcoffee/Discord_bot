@@ -1,5 +1,9 @@
 import discord
 import responses
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def send_message(message, user_message, is_private):
     try:
@@ -10,11 +14,32 @@ async def send_message(message, user_message, is_private):
         print(e)
 
 def run_discord_bot():
-    TOKEN = "MTE2MzQ1MTY1MzI0NTEyMDUyMg.GrF8T8.9X-z4-B8_QZ0tkKFl11DL0zNXspzNHlCfY9jzU"
-    client = discord.Client()
+
+    intents = discord.Intents.default()
+    intents.messages = True
+    client = discord.Client(intents=intents)
 
     @client.event
     async def on_ready():
         print (f"{client.user} is now running!")
 
-    client.run(TOKEN)
+    @client.event
+    async def on_message(message):
+        if message.author == client.user:  # makes sure the bot does not reply to itself
+            return
+
+        username = str(message.author)
+        user_message = str(message.content)
+        channel = str(message.channel)
+        is_private = isinstance(message.channel, discord.DMChannel)
+            
+        # if user_message and user_message[0] == "?":
+        #    user_message = user_message[1:] # removing the "?" character
+        #   await send_message(message, user_message, is_private = True)
+        # elif user_message:
+        #    await send_message(message, user_message, is_private = False)
+
+        await send_message(message, user_message, is_private = False)
+
+
+    client.run(os.getenv("TOKEN"))
