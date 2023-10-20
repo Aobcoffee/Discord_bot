@@ -38,7 +38,7 @@ def run_discord_bot():
         if user_message and user_message[0] == "?":
             user_message = user_message[1:] # removing the "?" character
             await send_message(message, user_message, is_private = True)
-        elif user_message:
+        elif user_message and message.author == client.user:
             await send_message(message, user_message, is_private = False)
 
         await send_message(message, user_message, is_private = False)
