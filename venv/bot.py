@@ -8,6 +8,7 @@ load_dotenv()
 async def send_message(message, user_message, is_private):
     try:
         response = responses.handle_response(user_message)
+        # Send to private if is_private
         await message.author.send(response) if is_private else await message.channel.send(response)
     
     except Exception as e:
@@ -15,8 +16,8 @@ async def send_message(message, user_message, is_private):
 
 def run_discord_bot():
 
-    intents = discord.Intents.default()
-    intents.messages = True
+    # To not ignoring user's messages
+    intents = discord.Intents().all()
     client = discord.Client(intents=intents)
 
     @client.event
@@ -32,12 +33,7 @@ def run_discord_bot():
         user_message = str(message.content)
         channel = str(message.channel)
         is_private = isinstance(message.channel, discord.DMChannel)
-            
-        # if user_message and user_message[0] == "?":
-        #    user_message = user_message[1:] # removing the "?" character
-        #   await send_message(message, user_message, is_private = True)
-        # elif user_message:
-        #    await send_message(message, user_message, is_private = False)
+        
 
         await send_message(message, user_message, is_private = False)
 
