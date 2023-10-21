@@ -24,6 +24,14 @@ def run_discord_bot():
     async def on_ready():
         print (f"{client.user} is now running!")
 
+        # Send the message when run the program
+        guilds = client.guilds
+        for guild in guilds:
+            for channel in guild.text_channels:
+                if channel.permissions_for(guild.me).send_messages:
+                    await channel.send("The bot is now ready to use!")
+
+
     @client.event
     async def on_message(message):
         if message.author == client.user:  # makes sure the bot does not reply to itself
